@@ -1,0 +1,114 @@
+// ---------- Overlay ----------
+.overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: flex-end; // Bottom sheet on mobile
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0);
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+    transition: background-color 0.25s ease, backdrop-filter 0.25s ease, -webkit-backdrop-filter 0.25s ease;
+    padding: 1rem;
+
+    @media (min-width: 480px) {
+        align-items: center;
+    }
+
+    &.overlayVisible {
+        background-color: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+}
+
+// ---------- Modal Content — Glassmorphism ----------
+.modalContent {
+    position: relative;
+    background: linear-gradient(145deg,
+            rgba(30, 30, 35, 0.85) 0%,
+            rgba(20, 20, 25, 0.92) 100%);
+    backdrop-filter: blur(40px) saturate(150%);
+    -webkit-backdrop-filter: blur(40px) saturate(150%);
+    border-radius: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow:
+        0 24px 48px -12px rgba(0, 0, 0, 0.5),
+        0 0 0 0.5px rgba(255, 255, 255, 0.05) inset,
+        0 1px 0 0 rgba(255, 255, 255, 0.06) inset;
+    width: 100%;
+    max-width: 26rem;
+    overflow: hidden;
+    color: white;
+
+    // Enter animation
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+
+    &.modalVisible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+// ---------- Close Button ----------
+.closeButton {
+    position: absolute;
+    top: 0.875rem;
+    right: 0.875rem;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.12);
+        color: rgba(255, 255, 255, 0.9);
+        transform: scale(1.1);
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+}
+
+// ---------- Header ----------
+.header {
+    padding: 1.25rem 1.5rem 1rem;
+    padding-right: 3rem; // Space for close button
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 0;
+        letter-spacing: -0.01em;
+    }
+}
+
+// ---------- Body ----------
+.body {
+    padding: 1.25rem 1.5rem;
+}
+
+// ---------- Footer ----------
+.footer {
+    padding: 1rem 1.5rem 1.25rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}

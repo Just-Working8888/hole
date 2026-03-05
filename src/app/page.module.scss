@@ -1,0 +1,40 @@
+.pageContent {
+    min-height: 100vh;
+    color: #ffffff;
+    padding-bottom: 5rem; // Space for bottom nav
+
+    &.authWrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+
+    h1 {
+        font-size: 1.5rem;
+        font-weight: 900;
+        font-style: italic;
+        margin: 0;
+    }
+}
+
+.networkBadge {
+    font-size: 0.75rem;
+    background-color: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
