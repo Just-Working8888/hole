@@ -1,4 +1,4 @@
-# HOL (mDigital) — Telegram Mini App / Web3 Wallet 💎
+# HOL () — Telegram Mini App / Web3 Wallet 💎
 
 Современный интерфейс крипто-кошелька для блокчейна **TON**, созданный в формате **Telegram Mini App (TMA)**. Проект сфокусирован на премиальном дизайне (Glassmorphism), высокой производительности и строгой архитектуре.
 
