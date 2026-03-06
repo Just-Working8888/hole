@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { TonConnectButton } from '@tonconnect/ui-react';
 import { useGetAccountQuery } from '@/shared/api/tonApi';
 import { BalanceDisplay } from '@/entities/wallet/index';
 import { Skeleton } from '@/shared/ui/Skeleton/index';
@@ -105,8 +106,9 @@ export const WalletCard = ({ address }: WalletCardProps) => {
     return (
         <>
             <div className={styles.walletCard}>
-                <div className={styles.header}>
+                <div className={styles.header} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <BalanceDisplay amount={account.balance} symbol="TON" />
+                    <TonConnectButton />
                 </div>
 
                 <div className={styles.actions}>

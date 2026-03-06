@@ -1,6 +1,6 @@
 import { FC, HTMLAttributes } from 'react';
 
-interface SkeletonProps extends HTMLAttributes<HTMLDivElement> { }
+type SkeletonProps = HTMLAttributes<HTMLDivElement>;
 
 import styles from './Skeleton.module.scss'; // SCSS
 

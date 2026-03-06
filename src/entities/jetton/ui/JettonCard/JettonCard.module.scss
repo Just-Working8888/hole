@@ -1,0 +1,96 @@
+// Glassmorphism Card
+.card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    // background: linear-gradient(145deg, rgba(30, 30, 35, 0.6) 0%, rgba(20, 20, 25, 0.8) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: transform 0.2s ease, background 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+    -webkit-tap-highlight-color: transparent;
+
+    &:active {
+        transform: scale(0.98);
+        background: rgba(255, 255, 255, 0.08);
+    }
+}
+
+.iconWrapper {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.icon {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.symbol {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.price {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #ffffff;
+}
+
+.name {
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.5);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+}
+
+.change {
+    font-size: 0.8125rem;
+    font-weight: 500;
+
+    &.positive {
+        color: #34C759; // iOS Green
+    }
+
+    &.negative {
+        color: #FF3B30; // iOS Red
+    }
+}
+
+.chartWrapper {
+    position: relative;
+    width: 60px;
+    height: 30px;
+    margin-left: 0.5rem;
+    flex-shrink: 0;
+}
+
+.chart {
+    object-fit: contain;
+    opacity: 0.8;
+}

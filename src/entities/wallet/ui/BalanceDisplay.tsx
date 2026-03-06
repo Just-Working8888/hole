@@ -1,4 +1,5 @@
 // src/entities/wallet/ui/BalanceDisplay.tsx
+import Image from 'next/image';
 import styles from './BalanceDisplay.module.scss';
 
 const TON_ICON_URL =
@@ -11,7 +12,7 @@ export const BalanceDisplay = ({ amount, symbol }: { amount: number; symbol: str
             <span className={styles.symbol}>{symbol}</span>
         </div>
         <div className={styles.tokenRow}>
-            <img src={TON_ICON_URL} alt={symbol} className={styles.tokenIcon} />
+            <Image src={TON_ICON_URL} alt={symbol} width={24} height={24} className={styles.tokenIcon} />
             <span className={styles.tokenLabel}>Toncoin</span>
         </div>
     </div>

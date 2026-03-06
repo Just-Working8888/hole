@@ -14,9 +14,13 @@ export const tonApi = createApi({
         getTransactions: builder.query({
             query: (address: string) => `/accounts/${address}/events?limit=10`,
             // Тут можно добавить сложную трансформацию, чтобы отфильтровать только нужные поля
-            transformResponse: (response: any) => response.events,
+            transformResponse: (response: { events: unknown[] }) => response.events,
+        }),
+        getJetton: builder.query({
+            query: (address: string) => `/jettons/${address}`,
+            // Возвращаем как есть (или можно тоже Zod-схему прикрутить)
         }),
     }),
 });
 
-export const { useGetAccountQuery, useGetTransactionsQuery } = tonApi;
+export const { useGetAccountQuery, useGetTransactionsQuery, useGetJettonQuery } = tonApi;

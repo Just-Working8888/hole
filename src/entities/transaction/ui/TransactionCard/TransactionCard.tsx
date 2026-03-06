@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import Image from 'next/image';
 import type { TransactionViewModel } from '../../model/types';
 import styles from './TransactionCard.module.scss';
 
@@ -28,7 +29,7 @@ export const TransactionCard = memo(({ data }: TransactionCardProps) => {
         <div className={styles.eventCard}>
             <div className={styles.iconWrapper}>
                 {iconUrl ? (
-                    <img src={iconUrl} alt={typeTitle} loading="lazy" />
+                    <Image src={iconUrl} alt={typeTitle} width={40} height={40} />
                 ) : (
                     fallbackEmoji
                 )}

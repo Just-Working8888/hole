@@ -1,33 +1,27 @@
-import { useState } from 'react';
-import { useAppDispatch } from '@/shared/model/hooks'; // Типизированный диспатч
-import { setAddress } from '@/entities/user'; // Экшн из слайса, который мы написали
-import { Button } from '@/shared/ui/Button/index';
-import styles from './AuthForm.module.scss'; // Импорт SCSS модулей
+import { useEffect } from 'react';
+import { useAppDispatch } from '@/shared/model/hooks';
+import { setAddress } from '@/entities/user';
+import { TonConnectButton, useTonAddress } from '@tonconnect/ui-react';
+import styles from './AuthForm.module.scss';
 
 export const AuthForm = () => {
-    const [value, setValue] = useState('');
     const dispatch = useAppDispatch();
+    const userFriendlyAddress = useTonAddress();
 
-    const handleLogin = () => {
-        if (value.length > 10) { // Базовая проверка на длину адреса TON
-            dispatch(setAddress(value));
+    useEffect(() => {
+        if (userFriendlyAddress) {
+            dispatch(setAddress(userFriendlyAddress));
         }
-    };
+    }, [userFriendlyAddress, dispatch]);
 
     return (
         <div className={styles.authForm}>
             <h2>Вход в Web3 Hub</h2>
-            <p>Введите ваш адрес кошелька TON, чтобы продолжить</p>
+            <p>Подключите ваш кошелек TON через TonConnect</p>
 
-            <input
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-                placeholder="EQCD39VS..."
-            />
-
-            <Button onClick={handleLogin} disabled={value.length < 10}>
-                <Button.Text>Подключить кошелёк</Button.Text>
-            </Button>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
+                <TonConnectButton />
+            </div>
         </div>
     );
 };
