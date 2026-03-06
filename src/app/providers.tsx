@@ -16,7 +16,18 @@ export function AppProviders({ children }: PropsWithChildren) {
   if (!manifestUrl) return null;
 
   return (
-    <TonConnectUIProvider manifestUrl={manifestUrl}>
+    <TonConnectUIProvider
+      manifestUrl={manifestUrl}
+      actionsConfiguration={{
+        twaReturnUrl: 'https://t.me/hole_support_bot/app' // Add your t.me bot URL if available
+      }}
+      // @ts-ignore
+      uiPreferences={{ theme: 'DARK' }}
+      uiOptions={{
+        // @ts-ignore
+        analytics: { mode: 'off' } // Turn off tonconnect analytics to prevent 400
+      }}
+    >
       <Provider store={store}>{children}</Provider>
     </TonConnectUIProvider>
   );
