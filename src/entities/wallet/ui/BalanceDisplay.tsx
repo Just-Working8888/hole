@@ -11,9 +11,6 @@ export const BalanceDisplay = ({ amount, symbol }: { amount: number; symbol: str
             <span className={styles.amount}>{amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
             <span className={styles.symbol}>{symbol}</span>
         </div>
-        <div className={styles.tokenRow}>
-            <Image src={TON_ICON_URL} alt={symbol} width={24} height={24} className={styles.tokenIcon} />
-            <span className={styles.tokenLabel}>Toncoin</span>
-        </div>
+
     </div>
 );
