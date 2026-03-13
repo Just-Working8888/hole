@@ -1,9 +1,5 @@
 // src/entities/wallet/ui/BalanceDisplay.tsx
-import Image from 'next/image';
 import styles from './BalanceDisplay.module.scss';
-
-const TON_ICON_URL =
-    'https://asset-metadata-service-production.s3.amazonaws.com/asset_icons/46db595e47fca18285c42eaa720fd4cdf3cc4940e1490ec07c77d21f2cf961cf.png';
 
 export const BalanceDisplay = ({ amount, symbol }: { amount: number; symbol: string }) => (
     <div className={styles.balanceContainer}>

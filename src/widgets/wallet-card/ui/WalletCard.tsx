@@ -4,17 +4,29 @@ import { useGetAccountQuery } from '@/shared/api/tonApi';
 import { BalanceDisplay } from '@/entities/wallet/index';
 import { Skeleton } from '@/shared/ui/Skeleton/index';
 import { Modal } from '@/shared/ui/Modal/Modal';
+import { Toast } from '@/shared/ui/Toast';
 import { QRCodeDisplay } from '@/features/receive-transaction/ui/QRCodeDisplay';
-import { TonPriceDisplay } from '@/entities/wallet/ui/TonPriceDisplay/TonPriceDisplay'; // ✅ новый импорт
+import { TonPriceDisplay } from '@/entities/wallet/ui/TonPriceDisplay/TonPriceDisplay';
+import { SendModal } from '@/features/send-transaction';
 import styles from './WalletCard.module.scss';
 
 interface WalletCardProps {
     address: string;
 }
 
+const shortenAddress = (addr: string) => `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+
 export const WalletCard = ({ address }: WalletCardProps) => {
     const { data: account, isLoading, isError } = useGetAccountQuery(address);
     const [isReceiveOpen, setIsReceiveOpen] = useState(false);
+    const [isSendOpen, setIsSendOpen] = useState(false);
+    const [copied, setCopied] = useState(false);
+
+    const handleCopyAddress = () => {
+        navigator.clipboard.writeText(account?.address ?? address);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
 
     if (isLoading) {
         return (
@@ -39,22 +51,6 @@ export const WalletCard = ({ address }: WalletCardProps) => {
         );
     }
 
-    const handleSend = () => {
-        console.log('Логика отправки транзакции через TonConnect...');
-    };
-
-    const handleReceive = () => {
-        setIsReceiveOpen(true);
-    };
-
-    const handleExchange = () => {
-        console.log('Exchange — скоро...');
-    };
-
-    const handleBuy = () => {
-        console.log('Buy — скоро...');
-    };
-
     const actions = [
         {
             key: 'send',
@@ -65,7 +61,7 @@ export const WalletCard = ({ address }: WalletCardProps) => {
                     <polyline points="7 7 17 7 17 17" />
                 </svg>
             ),
-            onClick: handleSend,
+            onClick: () => setIsSendOpen(true),
         },
         {
             key: 'receive',
@@ -76,7 +72,7 @@ export const WalletCard = ({ address }: WalletCardProps) => {
                     <polyline points="19 12 12 19 5 12" />
                 </svg>
             ),
-            onClick: handleReceive,
+            onClick: () => setIsReceiveOpen(true),
         },
         {
             key: 'exchange',
@@ -89,7 +85,7 @@ export const WalletCard = ({ address }: WalletCardProps) => {
                     <path d="M21 13v2a4 4 0 0 1-4 4H3" />
                 </svg>
             ),
-            onClick: handleExchange,
+            onClick: () => console.log('Exchange — скоро...'),
         },
         {
             key: 'buy',
@@ -100,18 +96,24 @@ export const WalletCard = ({ address }: WalletCardProps) => {
                     <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                 </svg>
             ),
-            onClick: handleBuy,
+            onClick: () => console.log('Buy — скоро...'),
         },
     ];
 
     return (
         <>
             <div className={styles.walletCard}>
-                <div className={styles.header} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div>
+                <div className={styles.header}>
+                    <div className={styles.balanceInfo}>
                         <BalanceDisplay amount={account.balance} symbol="TON" />
-                        {/* ✅ Добавили строку с USD эквивалентом */}
                         <TonPriceDisplay tonBalance={account.balance} />
+                        <button className={styles.addressChip} onClick={handleCopyAddress}>
+                            {shortenAddress(account.address)}
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                            </svg>
+                        </button>
                     </div>
                     <TonConnectButton />
                 </div>
@@ -129,6 +131,13 @@ export const WalletCard = ({ address }: WalletCardProps) => {
                     ))}
                 </div>
             </div>
+
+            {isSendOpen && (
+                <SendModal
+                    onClose={() => setIsSendOpen(false)}
+                    maxBalance={account.balance}
+                />
+            )}
 
             {isReceiveOpen && (
                 <Modal onClose={() => setIsReceiveOpen(false)}>
@@ -161,6 +170,8 @@ export const WalletCard = ({ address }: WalletCardProps) => {
                     </Modal.Footer>
                 </Modal>
             )}
+
+            <Toast message="Скопировано!" visible={copied} />
         </>
     );
 };

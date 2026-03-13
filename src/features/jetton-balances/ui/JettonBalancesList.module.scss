@@ -1,0 +1,96 @@
+.container {
+    margin-top: 1.25rem;
+}
+
+.title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 0.625rem;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 0.875rem;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: background 0.15s ease;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.07);
+    }
+}
+
+.iconWrap {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+}
+
+.icon {
+    border-radius: 50%;
+}
+
+.iconFallback {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+}
+
+.name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.symbol {
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.38);
+    margin-top: 0.15rem;
+}
+
+.balance {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    white-space: nowrap;
+}
+
+.skeletonRow {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 0.75rem 0;
+}
+
+.skeletonInfo {
+    flex: 1;
+}

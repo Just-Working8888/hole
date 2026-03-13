@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { AppProviders } from "./providers";
 import { BottomNav } from "@/widgets/bottom-nav";
+import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
 import "./globals.scss";
 
 export const metadata: Metadata = {
@@ -17,7 +18,9 @@ export default function RootLayout({
     <html lang="ru">
       <body>
         <AppProviders>
-          {children}
+          <ErrorBoundary>
+            {children}
+          </ErrorBoundary>
           <BottomNav />
         </AppProviders>
       </body>

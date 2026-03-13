@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAppSelector } from '@/shared/model/hooks';
 import { WalletCard } from '@/widgets/wallet-card';
 import { AuthForm } from '@/features/auth-by-address';
+import { JettonBalancesList } from '@/features/jetton-balances';
 import { TransactionList } from '@/features/transaction-history';
 import styles from './page.module.scss';
 
@@ -30,7 +31,10 @@ export default function HomePage() {
   return (
     <main className={`${styles.pageContent} ${styles.dashboard}`}>
       <WalletCard address={address!} />
-      <TransactionList address={address!} />
+      <div style={{ padding: '0 1rem' }}>
+        <JettonBalancesList address={address!} />
+        <TransactionList address={address!} />
+      </div>
     </main>
   );
 }

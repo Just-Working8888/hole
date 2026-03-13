@@ -4,26 +4,23 @@ import { Provider } from "react-redux";
 import { store } from "@/shared/store";
 import type { PropsWithChildren } from "react";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
-import { useEffect, useState } from "react";
+
+// Используем env переменную — работает и локально, и на продакшене.
+// Локальный localhost недоступен мобильным кошелькам, поэтому всегда
+// указываем на задеплоенный манифест.
+const MANIFEST_URL =
+    process.env.NEXT_PUBLIC_MANIFEST_URL ??
+    "https://hole-nu.vercel.app/tonconnect-manifest.json";
 
 export function AppProviders({ children }: PropsWithChildren) {
-  const [manifestUrl, setManifestUrl] = useState("");
-
-  useEffect(() => {
-    setManifestUrl(`${window.location.origin}/tonconnect-manifest.json`);
-  }, []);
-
-  // ✅ Не рендерим дерево пока нет manifestUrl (SSR защита)
-  if (!manifestUrl) return null;
-
-  return (
-    <TonConnectUIProvider
-      manifestUrl={manifestUrl}
-      actionsConfiguration={{
-        twaReturnUrl: "https://hole-nu.vercel.app",
-      }}
-    >
-      <Provider store={store}>{children}</Provider>
-    </TonConnectUIProvider>
-  );
+    return (
+        <TonConnectUIProvider
+            manifestUrl={MANIFEST_URL}
+            actionsConfiguration={{
+                twaReturnUrl: "https://hole-nu.vercel.app",
+            }}
+        >
+            <Provider store={store}>{children}</Provider>
+        </TonConnectUIProvider>
+    );
 }
