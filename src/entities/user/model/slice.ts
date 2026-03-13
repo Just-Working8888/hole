@@ -5,8 +5,13 @@ interface UserState {
     isAuth: boolean;
 }
 
-// Пытаемся достать адрес из памяти браузера
-const savedAddress = typeof window !== 'undefined' ? localStorage.getItem('wallet_address') : null;
+// ✅ Безопасное чтение localStorage — только на клиенте
+const getStoredAddress = (): string | null => {
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem('wallet_address');
+};
+
+const savedAddress = getStoredAddress();
 
 const initialState: UserState = {
     address: savedAddress,
@@ -20,12 +25,16 @@ export const userSlice = createSlice({
         setAddress: (state, action: PayloadAction<string>) => {
             state.address = action.payload;
             state.isAuth = true;
-            localStorage.setItem('wallet_address', action.payload); // Сохраняем
+            if (typeof window !== 'undefined') {
+                localStorage.setItem('wallet_address', action.payload);
+            }
         },
         logout: (state) => {
             state.address = null;
             state.isAuth = false;
-            localStorage.removeItem('wallet_address');
+            if (typeof window !== 'undefined') {
+                localStorage.removeItem('wallet_address');
+            }
         },
     },
 });

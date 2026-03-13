@@ -13,19 +13,14 @@ export function AppProviders({ children }: PropsWithChildren) {
     setManifestUrl(`${window.location.origin}/tonconnect-manifest.json`);
   }, []);
 
+  // ✅ Не рендерим дерево пока нет manifestUrl (SSR защита)
   if (!manifestUrl) return null;
 
   return (
     <TonConnectUIProvider
       manifestUrl={manifestUrl}
       actionsConfiguration={{
-        twaReturnUrl: 'https://t.me/hole_support_bot/app' // Add your t.me bot URL if available
-      }}
-      // @ts-ignore
-      uiPreferences={{ theme: 'DARK' }}
-      uiOptions={{
-        // @ts-ignore
-        analytics: { mode: 'off' } // Turn off tonconnect analytics to prevent 400
+        twaReturnUrl: "https://hole-nu.vercel.app",
       }}
     >
       <Provider store={store}>{children}</Provider>

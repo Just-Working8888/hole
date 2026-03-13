@@ -1,18 +1,21 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { baseApi } from "@/shared/api/baseApi";
+import { userSlice } from "@/entities/user/model/slice";
 import { tonApi } from "@/shared/api/tonApi";
 import { dyorApi } from "@/shared/api/dyorApi";
-import { userSlice } from "@/entities/user";
+import { coinGeckoApi } from "@/shared/api/coinGeckoApi"; 
 
 export const store = configureStore({
   reducer: {
-    [baseApi.reducerPath]: baseApi.reducer,
+    [userSlice.name]: userSlice.reducer,
     [tonApi.reducerPath]: tonApi.reducer,
     [dyorApi.reducerPath]: dyorApi.reducer,
-    user: userSlice.reducer,
+    [coinGeckoApi.reducerPath]: coinGeckoApi.reducer, 
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(baseApi.middleware, tonApi.middleware, dyorApi.middleware),
+    getDefaultMiddleware()
+      .concat(tonApi.middleware)
+      .concat(dyorApi.middleware)
+      .concat(coinGeckoApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

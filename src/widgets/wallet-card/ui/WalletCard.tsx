@@ -5,6 +5,7 @@ import { BalanceDisplay } from '@/entities/wallet/index';
 import { Skeleton } from '@/shared/ui/Skeleton/index';
 import { Modal } from '@/shared/ui/Modal/Modal';
 import { QRCodeDisplay } from '@/features/receive-transaction/ui/QRCodeDisplay';
+import { TonPriceDisplay } from '@/entities/wallet/ui/TonPriceDisplay/TonPriceDisplay'; // ✅ новый импорт
 import styles from './WalletCard.module.scss';
 
 interface WalletCardProps {
@@ -107,7 +108,11 @@ export const WalletCard = ({ address }: WalletCardProps) => {
         <>
             <div className={styles.walletCard}>
                 <div className={styles.header} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <BalanceDisplay amount={account.balance} symbol="TON" />
+                    <div>
+                        <BalanceDisplay amount={account.balance} symbol="TON" />
+                        {/* ✅ Добавили строку с USD эквивалентом */}
+                        <TonPriceDisplay tonBalance={account.balance} />
+                    </div>
                     <TonConnectButton />
                 </div>
 
