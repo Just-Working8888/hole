@@ -29,14 +29,15 @@ export const TransactionList = ({ address }: TransactionListProps) => {
         beforeLt,
     });
 
+    const allEvents = page?.events ?? [];
     const nextFrom = page?.next_from;
     const hasMore = !!nextFrom;
 
     const viewModels = useMemo<TransactionViewModel[]>(() => {
-        return (page?.events ?? [])
+        return allEvents
             .map((event) => mapTransactionEventToView(event, address))
             .filter((vm): vm is NonNullable<typeof vm> => vm !== null);
-    }, [page?.events, address]);
+    }, [allEvents, address]);
 
     const filtered = useMemo<TransactionViewModel[]>(() => {
         switch (filter) {
@@ -66,7 +67,7 @@ export const TransactionList = ({ address }: TransactionListProps) => {
         [isFetching, hasMore, nextFrom],
     );
 
-    if (isLoading && !page) {
+    if (isLoading && allEvents.length === 0) {
         return (
             <div className={styles.transactionList}>
                 <div className={styles.skeletons}>
