@@ -103,6 +103,10 @@ export const WalletCard = ({ address }: WalletCardProps) => {
     return (
         <>
             <div className={styles.walletCard}>
+                <div className={styles.networkBadge}>
+                    <span className={styles.networkDot} />
+                    Mainnet
+                </div>
                 <div className={styles.header}>
                     <div className={styles.balanceInfo}>
                         <BalanceDisplay amount={account.balance} symbol="TON" />

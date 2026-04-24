@@ -1,28 +1,33 @@
 .balanceContainer {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
+    align-items: flex-start;
+    gap: 0.25rem;
 }
 
 .mainBalance {
     display: flex;
     align-items: baseline;
-    justify-content: center;
     gap: 0.5rem;
 }
 
 .amount {
-    font-size: 2.75rem;
+    font-size: 3.5rem;
     font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    color: #ffffff;
+    text-shadow:
+        0 0 30px rgba(255, 255, 255, 0.35),
+        0 0 60px rgba(0, 152, 234, 0.2),
+        0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 .symbol {
-    font-size: 1.25rem;
-    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.375rem;
+    color: rgba(255, 255, 255, 0.55);
     font-weight: 500;
+    letter-spacing: -0.01em;
 }
 
 .tokenRow {

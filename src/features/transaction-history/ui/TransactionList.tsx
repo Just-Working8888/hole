@@ -21,6 +21,14 @@ const FILTERS: { id: Filter; label: string }[] = [
     { id: 'failed', label: 'Failed' },
 ];
 
+const formatGroupDate = (dateStr: string): string => {
+    const today = new Date().toLocaleDateString();
+    const yesterday = new Date(Date.now() - 86_400_000).toLocaleDateString();
+    if (dateStr === today) return 'Сегодня';
+    if (dateStr === yesterday) return 'Вчера';
+    return dateStr;
+};
+
 export const TransactionList = ({ address }: TransactionListProps) => {
     const [filter, setFilter] = useState<Filter>('all');
     const [beforeLt, setBeforeLt] = useState<number | undefined>(undefined);
@@ -43,16 +51,27 @@ export const TransactionList = ({ address }: TransactionListProps) => {
 
     const filtered = useMemo<TransactionViewModel[]>(() => {
         switch (filter) {
-            case 'income':
-                return viewModels.filter((vm) => vm.direction === 'income');
-            case 'expense':
-                return viewModels.filter((vm) => vm.direction === 'expense');
-            case 'failed':
-                return viewModels.filter((vm) => !vm.isSuccess);
-            default:
-                return viewModels;
+            case 'income':  return viewModels.filter((vm) => vm.direction === 'income');
+            case 'expense': return viewModels.filter((vm) => vm.direction === 'expense');
+            case 'failed':  return viewModels.filter((vm) => !vm.isSuccess);
+            default:        return viewModels;
         }
     }, [viewModels, filter]);
+
+    // Group by date
+    const grouped = useMemo(() => {
+        const groups: { date: string; items: TransactionViewModel[] }[] = [];
+        const seen = new Map<string, TransactionViewModel[]>();
+        for (const vm of filtered) {
+            if (!seen.has(vm.date)) {
+                const arr: TransactionViewModel[] = [];
+                seen.set(vm.date, arr);
+                groups.push({ date: vm.date, items: arr });
+            }
+            seen.get(vm.date)!.push(vm);
+        }
+        return groups;
+    }, [filtered]);
 
     const observer = useRef<IntersectionObserver | null>(null);
     const lastItemRef = useCallback(
@@ -75,9 +94,7 @@ export const TransactionList = ({ address }: TransactionListProps) => {
                 <div className={styles.skeletons}>
                     {[...Array(4)].map((_, i) => (
                         <div key={i} className={styles.skeletonRow}>
-                            <Skeleton
-                                style={{ width: 40, height: 40, borderRadius: '50%', flexShrink: 0 }}
-                            />
+                            <Skeleton style={{ width: 40, height: 40, borderRadius: '50%', flexShrink: 0 }} />
                             <div className={styles.skeletonInfo}>
                                 <Skeleton style={{ width: '55%', height: 14 }} />
                                 <Skeleton style={{ width: '35%', height: 12, marginTop: 6 }} />
@@ -90,55 +107,70 @@ export const TransactionList = ({ address }: TransactionListProps) => {
         );
     }
 
+    // flat list of items for last-item ref calculation
+    const allFiltered = grouped.flatMap((g) => g.items);
+    const lastItemId = allFiltered[allFiltered.length - 1]?.id;
+
     return (
         <>
-        <div className={styles.transactionList}>
-            <div className={styles.filters}>
-                {FILTERS.map((f) => (
-                    <button
-                        key={f.id}
-                        className={`${styles.filterBtn} ${filter === f.id ? styles.active : ''}`}
-                        onClick={() => setFilter(f.id)}
-                    >
-                        {f.label}
-                    </button>
-                ))}
+            <div className={styles.transactionList}>
+                <div className={styles.filters}>
+                    {FILTERS.map((f) => (
+                        <button
+                            key={f.id}
+                            className={`${styles.filterBtn} ${filter === f.id ? styles.active : ''}`}
+                            onClick={() => setFilter(f.id)}
+                        >
+                            {f.label}
+                        </button>
+                    ))}
+                </div>
+
+                {grouped.length === 0 && !isFetching ? (
+                    <div className={styles.empty}>
+                        {filter === 'all'
+                            ? 'История транзакций пуста'
+                            : 'Нет транзакций в этой категории'}
+                    </div>
+                ) : (
+                    <div className={styles.list}>
+                        {grouped.map((group) => (
+                            <div key={group.date}>
+                                <div className={styles.dateSeparator}>
+                                    <span className={styles.dateSeparatorText}>
+                                        {formatGroupDate(group.date)}
+                                    </span>
+                                </div>
+                                {group.items.map((vm, idx) => (
+                                    <div
+                                        key={vm.id}
+                                        ref={vm.id === lastItemId ? lastItemRef : null}
+                                        className={styles.fadeItem}
+                                        style={{ animationDelay: `${Math.min(idx * 35, 150)}ms` }}
+                                    >
+                                        <TransactionCard data={vm} onClick={() => setSelectedTx(vm)} />
+                                    </div>
+                                ))}
+                            </div>
+                        ))}
+
+                        {isFetching && (
+                            <div className={styles.loadingMore}>
+                                <div className={styles.dot} />
+                                <div className={styles.dot} />
+                                <div className={styles.dot} />
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
 
-            {filtered.length === 0 && !isFetching ? (
-                <div className={styles.empty}>
-                    {filter === 'all'
-                        ? 'История транзакций пуста'
-                        : 'Нет транзакций в этой категории'}
-                </div>
-            ) : (
-                <div className={styles.list}>
-                    {filtered.map((vm, index) => {
-                        const isLast = index === filtered.length - 1;
-                        return (
-                            <div key={vm.id} ref={isLast ? lastItemRef : null}>
-                                <TransactionCard data={vm} onClick={() => setSelectedTx(vm)} />
-                            </div>
-                        );
-                    })}
-
-                    {isFetching && (
-                        <div className={styles.loadingMore}>
-                            <div className={styles.dot} />
-                            <div className={styles.dot} />
-                            <div className={styles.dot} />
-                        </div>
-                    )}
-                </div>
+            {selectedTx && (
+                <TransactionDetailModal
+                    data={selectedTx}
+                    onClose={() => setSelectedTx(null)}
+                />
             )}
-        </div>
-
-        {selectedTx && (
-            <TransactionDetailModal
-                data={selectedTx}
-                onClose={() => setSelectedTx(null)}
-            />
-        )}
         </>
     );
 };
