@@ -74,13 +74,18 @@ export interface TransactionEvent {
 // ViewModel для UI — чистые, готовые к рендеру данные
 export interface TransactionViewModel {
     id: string;
+    eventId: string;
     typeTitle: string;
     description: string;
     displayValue: string;
     direction: 'income' | 'expense' | 'neutral';
     isSuccess: boolean;
+    isScam: boolean;
     iconUrl: string | null;
     fallbackEmoji: string;
     date: string;
     time: string;
+    comment?: string;
+    senderAddress?: string;
+    recipientAddress?: string;
 }

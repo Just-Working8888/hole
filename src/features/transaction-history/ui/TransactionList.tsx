@@ -5,6 +5,7 @@ import { useGetTransactionsQuery } from '@/shared/api/tonApi';
 import { mapTransactionEventToView, TransactionCard } from '@/entities/transaction';
 import type { TransactionViewModel } from '@/entities/transaction';
 import { Skeleton } from '@/shared/ui/Skeleton';
+import { TransactionDetailModal } from './TransactionDetailModal/TransactionDetailModal';
 import styles from './TransactionList.module.scss';
 
 interface TransactionListProps {
@@ -23,6 +24,7 @@ const FILTERS: { id: Filter; label: string }[] = [
 export const TransactionList = ({ address }: TransactionListProps) => {
     const [filter, setFilter] = useState<Filter>('all');
     const [beforeLt, setBeforeLt] = useState<number | undefined>(undefined);
+    const [selectedTx, setSelectedTx] = useState<TransactionViewModel | null>(null);
 
     const { data: page, isLoading, isFetching } = useGetTransactionsQuery({
         address,
@@ -89,6 +91,7 @@ export const TransactionList = ({ address }: TransactionListProps) => {
     }
 
     return (
+        <>
         <div className={styles.transactionList}>
             <div className={styles.filters}>
                 {FILTERS.map((f) => (
@@ -114,7 +117,7 @@ export const TransactionList = ({ address }: TransactionListProps) => {
                         const isLast = index === filtered.length - 1;
                         return (
                             <div key={vm.id} ref={isLast ? lastItemRef : null}>
-                                <TransactionCard data={vm} />
+                                <TransactionCard data={vm} onClick={() => setSelectedTx(vm)} />
                             </div>
                         );
                     })}
@@ -129,5 +132,13 @@ export const TransactionList = ({ address }: TransactionListProps) => {
                 </div>
             )}
         </div>
+
+        {selectedTx && (
+            <TransactionDetailModal
+                data={selectedTx}
+                onClose={() => setSelectedTx(null)}
+            />
+        )}
+        </>
     );
 };

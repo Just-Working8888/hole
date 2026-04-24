@@ -1,14 +1,25 @@
 'use client';
 
+import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useGetJettonQuery } from '@/shared/api/tonApi';
+import { JettonPriceChart } from '@/features/jetton-chart';
 import styles from './page.module.scss';
+
+type Period = '1d' | '7d' | '30d';
+
+const PERIODS: { id: Period; label: string }[] = [
+    { id: '1d', label: '1Д' },
+    { id: '7d', label: '7Д' },
+    { id: '30d', label: '30Д' },
+];
 
 export default function JettonDetailPage() {
     const params = useParams();
     const router = useRouter();
     const address = params?.address as string | undefined;
+    const [period, setPeriod] = useState<Period>('7d');
 
     const { data: jetton, isLoading, isError } = useGetJettonQuery(address || '', {
         skip: !address,
@@ -56,6 +67,24 @@ export default function JettonDetailPage() {
                 </div>
             </div>
 
+            {/* График */}
+            {address && (
+                <div className={styles.chartSection}>
+                    <div className={styles.periodSelector}>
+                        {PERIODS.map((p) => (
+                            <button
+                                key={p.id}
+                                className={`${styles.periodBtn} ${period === p.id ? styles.periodActive : ''}`}
+                                onClick={() => setPeriod(p.id)}
+                            >
+                                {p.label}
+                            </button>
+                        ))}
+                    </div>
+                    <JettonPriceChart jettonAddress={address} period={period} />
+                </div>
+            )}
+
             <div className={styles.card}>
                 <div className={styles.row}>
                     <span className={styles.label}>Общее предложение (Supply):</span>
@@ -73,7 +102,6 @@ export default function JettonDetailPage() {
                 <span className={styles.label}>Адрес контракта:</span>
                 <p className={styles.addressHash}>{jetton.metadata?.address}</p>
             </div>
-
         </main>
     );
 }

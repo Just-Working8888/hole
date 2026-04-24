@@ -56,7 +56,12 @@ export const JettonBalancesList = ({ address }: JettonBalancesListProps) => {
                             )}
                         </div>
                         <div className={styles.info}>
-                            <span className={styles.name}>{item.jetton.name}</span>
+                            <div className={styles.nameRow}>
+                                <span className={styles.name}>{item.jetton.name}</span>
+                                {item.jetton.verification === 'blacklist' && (
+                                    <span className={styles.scamBadge}>⚠️ Scam</span>
+                                )}
+                            </div>
                             <span className={styles.symbol}>{item.jetton.symbol}</span>
                         </div>
                         <span className={styles.balance}>

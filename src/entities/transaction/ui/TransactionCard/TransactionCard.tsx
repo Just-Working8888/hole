@@ -5,15 +5,17 @@ import styles from './TransactionCard.module.scss';
 
 interface TransactionCardProps {
     data: TransactionViewModel;
+    onClick?: () => void;
 }
 
-export const TransactionCard = memo(({ data }: TransactionCardProps) => {
+export const TransactionCard = memo(({ data, onClick }: TransactionCardProps) => {
     const {
         typeTitle,
         description,
         displayValue,
         direction,
         isSuccess,
+        isScam,
         iconUrl,
         fallbackEmoji,
         date,
@@ -26,7 +28,7 @@ export const TransactionCard = memo(({ data }: TransactionCardProps) => {
             : `${styles.value} ${styles.negative}`;
 
     return (
-        <div className={styles.eventCard}>
+        <div className={`${styles.eventCard} ${onClick ? styles.clickable : ''}`} onClick={onClick}>
             <div className={styles.iconWrapper}>
                 {iconUrl ? (
                     <Image src={iconUrl} alt={typeTitle} width={40} height={40} />
@@ -51,6 +53,9 @@ export const TransactionCard = memo(({ data }: TransactionCardProps) => {
                         )}
                         {!isSuccess && (
                             <span className={styles.failedBadge}>Failed</span>
+                        )}
+                        {isScam && (
+                            <span className={styles.scamBadge}>⚠️ Scam</span>
                         )}
                     </p>
                     <span className={valueClass}>{displayValue}</span>

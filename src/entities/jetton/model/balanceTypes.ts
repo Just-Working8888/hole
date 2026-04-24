@@ -6,5 +6,6 @@ export interface JettonBalanceItem {
         symbol: string;
         decimals: number;
         image: string;
+        verification?: 'whitelist' | 'blacklist' | 'none';
     };
 }

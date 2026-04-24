@@ -13,6 +13,11 @@ export interface GetTransactionsParams {
     beforeLt?: number;
 }
 
+export interface ChartDataPoint {
+    timestamp: number;
+    price: number;
+}
+
 export const tonApi = createApi({
     reducerPath: 'tonApi',
     baseQuery: fetchBaseQuery({
@@ -55,6 +60,21 @@ export const tonApi = createApi({
             transformResponse: (response: { balances: JettonBalanceItem[] }) =>
                 response.balances ?? [],
         }),
+        getJettonWalletAddress: builder.query<string, { accountId: string; jettonAddress: string }>({
+            query: ({ accountId, jettonAddress }) =>
+                `/accounts/${accountId}/jettons/${jettonAddress}/wallet`,
+            transformResponse: (response: { address: string }) => response.address,
+        }),
+        getTokenPriceChart: builder.query<ChartDataPoint[], { address: string; period: '1d' | '7d' | '30d' }>({
+            query: ({ address, period }) => {
+                const end = Math.floor(Date.now() / 1000);
+                const seconds = period === '1d' ? 86400 : period === '7d' ? 604800 : 2592000;
+                const start = end - seconds;
+                return `/rates/chart?tokens=${address}&currency=USD&start_date=${start}&end_date=${end}&points_count=50`;
+            },
+            transformResponse: (response: { points: [number, string][] }) =>
+                (response.points ?? []).map(([ts, price]) => ({ timestamp: ts * 1000, price: Number(price) })),
+        }),
     }),
 });
 
@@ -63,4 +83,6 @@ export const {
     useGetTransactionsQuery,
     useGetJettonQuery,
     useGetJettonBalancesQuery,
+    useGetJettonWalletAddressQuery,
+    useGetTokenPriceChartQuery,
 } = tonApi;

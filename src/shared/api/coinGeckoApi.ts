@@ -4,6 +4,10 @@ interface TonPriceResponse {
     "the-open-network": {
         usd: number;
         usd_24h_change: number;
+        eur: number;
+        eur_24h_change: number;
+        rub: number;
+        rub_24h_change: number;
     };
 }
 
@@ -12,7 +16,6 @@ export const coinGeckoApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: process.env.NEXT_PUBLIC_COINGECKO_API_URL ?? "https://api.coingecko.com/api/v3",
     }),
-    // ✅ Кэшируем на 60 секунд — не спамим CoinGecko
     keepUnusedDataFor: 60,
     endpoints: (builder) => ({
         getTonPrice: builder.query<TonPriceResponse, void>({
@@ -20,7 +23,7 @@ export const coinGeckoApi = createApi({
                 url: "/simple/price",
                 params: {
                     ids: "the-open-network",
-                    vs_currencies: "usd",
+                    vs_currencies: "usd,eur,rub",
                     include_24hr_change: true,
                 },
             }),

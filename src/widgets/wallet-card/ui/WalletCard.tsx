@@ -136,6 +136,7 @@ export const WalletCard = ({ address }: WalletCardProps) => {
                 <SendModal
                     onClose={() => setIsSendOpen(false)}
                     maxBalance={account.balance}
+                    walletAddress={address}
                 />
             )}
 

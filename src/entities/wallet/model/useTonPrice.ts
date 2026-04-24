@@ -1,23 +1,42 @@
 import { useGetTonPriceQuery } from "@/shared/api/coinGeckoApi";
+import { useAppSelector } from "@/shared/model/hooks";
 
 interface UseTonPriceResult {
-    priceUsd: number | null;
+    price: number | null;
     change24h: number | null;
+    currencySymbol: string;
     isLoading: boolean;
     isError: boolean;
 }
 
-/**
- * Хук возвращает текущий курс TON в USD и изменение за 24ч.
- * Пример использования:
- *   const { priceUsd, change24h } = useTonPrice();
- *   const usdValue = tonBalance * (priceUsd ?? 0);
- */
 export const useTonPrice = (): UseTonPriceResult => {
     const { data, isLoading, isError } = useGetTonPriceQuery();
+    const currency = useAppSelector((state) => state.settings.currency);
 
-    const priceUsd = data?.["the-open-network"]?.usd ?? null;
-    const change24h = data?.["the-open-network"]?.usd_24h_change ?? null;
+    const ton = data?.["the-open-network"];
 
-    return { priceUsd, change24h, isLoading, isError };
+    let price: number | null = null;
+    let change24h: number | null = null;
+    let currencySymbol = '$';
+
+    if (ton) {
+        switch (currency) {
+            case 'EUR':
+                price = ton.eur ?? null;
+                change24h = ton.eur_24h_change ?? null;
+                currencySymbol = '€';
+                break;
+            case 'RUB':
+                price = ton.rub ?? null;
+                change24h = ton.rub_24h_change ?? null;
+                currencySymbol = '₽';
+                break;
+            default:
+                price = ton.usd ?? null;
+                change24h = ton.usd_24h_change ?? null;
+                currencySymbol = '$';
+        }
+    }
+
+    return { price, change24h, currencySymbol, isLoading, isError };
 };

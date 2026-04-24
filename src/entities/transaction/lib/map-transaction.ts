@@ -27,10 +27,13 @@ export const mapTransactionEventToView = (
         minute: '2-digit',
     });
 
-    // ---------- Направление и иконка ----------
+    // ---------- Направление, иконка и детали ----------
     let direction: 'income' | 'expense' | 'neutral' = 'neutral';
     let iconUrl: string | null = null;
     let fallbackEmoji = '⚙️';
+    let comment: string | undefined;
+    let senderAddress: string | undefined;
+    let recipientAddress: string | undefined;
 
     if (action.type === 'TonTransfer' && action.TonTransfer) {
         const { sender, recipient } = action.TonTransfer;
@@ -38,12 +41,18 @@ export const mapTransactionEventToView = (
         if (recipient?.address === walletAddress) direction = 'income';
         iconUrl = TON_ICON_URL;
         fallbackEmoji = '💸';
+        comment = action.TonTransfer.comment;
+        senderAddress = sender?.address;
+        recipientAddress = recipient?.address;
     } else if (action.type === 'JettonTransfer' && action.JettonTransfer) {
         const { sender, recipient } = action.JettonTransfer;
         if (sender?.address === walletAddress) direction = 'expense';
         if (recipient?.address === walletAddress) direction = 'income';
         iconUrl = action.JettonTransfer.jetton?.image ?? null;
         fallbackEmoji = '💸';
+        comment = action.JettonTransfer.comment;
+        senderAddress = sender?.address ?? undefined;
+        recipientAddress = recipient?.address ?? undefined;
     } else if (action.type.includes('Transfer')) {
         fallbackEmoji = '💸';
     }
@@ -59,14 +68,19 @@ export const mapTransactionEventToView = (
 
     return {
         id: event.event_id,
+        eventId: event.event_id,
         typeTitle: preview?.name || action.type,
         description: preview?.description || 'Детали транзакции скрыты',
         displayValue,
         direction,
         isSuccess: action.status === 'ok',
+        isScam: event.is_scam,
         iconUrl,
         fallbackEmoji,
         date,
         time,
+        comment,
+        senderAddress,
+        recipientAddress,
     };
 };
