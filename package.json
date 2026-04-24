@@ -15,6 +15,7 @@
     "@reduxjs/toolkit": "^2.6.1",
     "@ton/core": "^0.63.1",
     "@tonconnect/ui-react": "^2.4.2",
+    "lucide-react": "^1.9.0",
     "next": "15.2.8",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

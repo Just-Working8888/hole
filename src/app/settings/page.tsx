@@ -7,6 +7,7 @@ import type { Language, Currency } from '@/entities/settings';
 import { logout } from '@/entities/user/model/slice';
 import { ContactsManager } from '@/features/address-book';
 import styles from './page.module.scss';
+import { Globe, Coins, Info, LogOut } from 'lucide-react';
 
 const LANGUAGES: { id: Language; label: string }[] = [
     { id: 'ru', label: 'RU' },
@@ -43,7 +44,7 @@ export default function SettingsPage() {
 
                     <div className={styles.settingItem}>
                         <div className={styles.settingLeft}>
-                            <span className={styles.settingIcon}>🌐</span>
+                            <span className={styles.settingIcon}><Globe size={24} /></span>
                             <p className={styles.settingName}>Язык</p>
                         </div>
                         <div className={styles.toggleGroup}>
@@ -61,7 +62,7 @@ export default function SettingsPage() {
 
                     <div className={styles.settingItem}>
                         <div className={styles.settingLeft}>
-                            <span className={styles.settingIcon}>💰</span>
+                            <span className={styles.settingIcon}><Coins size={24} /></span>
                             <p className={styles.settingName}>Валюта</p>
                         </div>
                         <div className={styles.toggleGroup}>
@@ -91,7 +92,7 @@ export default function SettingsPage() {
                     <h2 className={styles.groupTitle}>О приложении</h2>
                     <div className={`${styles.settingItem} ${styles.noHover}`}>
                         <div className={styles.settingLeft}>
-                            <span className={styles.settingIcon}>ℹ️</span>
+                            <span className={styles.settingIcon}><Info size={24} /></span>
                             <div>
                                 <p className={styles.settingName}>Версия</p>
                                 <p className={styles.settingDesc}>1.0.0</p>
@@ -105,7 +106,7 @@ export default function SettingsPage() {
                     <h2 className={styles.groupTitle}>Аккаунт</h2>
                     <button className={`${styles.settingItem} ${styles.dangerItem}`} onClick={handleLogout}>
                         <div className={styles.settingLeft}>
-                            <span className={styles.settingIcon}>🚪</span>
+                            <span className={styles.settingIcon}><LogOut size={24} /></span>
                             <p className={styles.settingName}>Выйти из кошелька</p>
                         </div>
                     </button>
